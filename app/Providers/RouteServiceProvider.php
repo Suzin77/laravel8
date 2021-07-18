@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
-class RouteServiceProvider extends ServiceProvider
+class   RouteServiceProvider extends ServiceProvider
 {
     /**
      * The path to the "home" route for your application.
@@ -47,6 +47,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
         });
+
+        Route::pattern('id','[0-9]+');
     }
 
     /**
