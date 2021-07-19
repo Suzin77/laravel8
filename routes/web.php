@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,25 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'home.index')->name('home.index');
-Route::view('/contact', 'home.contact')->name('home.contact');
+Route::resource('posts', PostsController::class)->only('index', 'show');
 
-Route::get('/posts/{id}', function ($id){
 
-    $posts = [
-        1=> [
-            'title' => 'title1',
-            'content' => 'content1'
-        ],
-        2=> [
-            'title' => 'title2',
-            'content' => 'content2'
-        ],
-    ];
-    //dd($posts[1]);
-    abort_if(!isset($posts[$id]),404);
-    return view('posts.show',['posts' => $posts[$id]]);
-})->name('posts.show');
+Route::get('/', [HomeController::class, 'home'])
+    ->name('home.index');
+Route::get('/contact', [HomeController::class, 'contact'])
+    ->name('home.contact');
+
+Route::get('/single', AboutController::class);
+
 
 $posts = [
     1=> [
@@ -44,9 +38,16 @@ $posts = [
     ],
 ];
 
-Route::get('/posts', function () use ($posts){
-    return view('posts.index', compact('posts'));
-});
+//Route::get('/posts/{id}', function ($id) use($posts){
+//
+//    //dd($posts[1]);
+//    abort_if(!isset($posts[$id]),404);
+//    return view('posts.show',['posts' => $posts[$id]]);
+//})->name('posts.show');
+
+//Route::get('/posts', function () use ($posts){
+//    return view('posts.index', compact('posts'));
+//});
 
 Route::get('/recent/{days_ago?}', function ($ago = 20){
     return 'tyle dni '.$ago;

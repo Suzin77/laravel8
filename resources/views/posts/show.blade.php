@@ -4,8 +4,8 @@
 
 @section('content')
     <h1> Post  </h1>
-    <p>{{$post['title']}}</p></br>
-    <p>{{$post['content']}}</p></br>
+    <p>{{$posts['title']}}</p></br>
+    <p>{{$posts['content']}}</p></br>
 
 {{--    @foreach($posts as $posts)--}}
 {{--        <p>{{$posts['title']}}</p></br>--}}
