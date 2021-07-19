@@ -7,8 +7,8 @@
     <p>{{$post['title']}}</p></br>
     <p>{{$post['content']}}</p></br>
 
-{{--    @foreach($posts as $post)--}}
-{{--        <p>{{$post['title']}}</p></br>--}}
-{{--        <p>{{$post['content']}}</p></br>--}}
+{{--    @foreach($posts as $posts)--}}
+{{--        <p>{{$posts['title']}}</p></br>--}}
+{{--        <p>{{$posts['content']}}</p></br>--}}
 {{--    @endforeach--}}
 @endsection
