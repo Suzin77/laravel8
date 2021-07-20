@@ -5,8 +5,7 @@
 @section('content')
     <h1> Posts</h1>
 
-        @foreach($posts as $posts)
-            <p>{{$posts['title']}}</p>
-            <p>{{$posts['content']}}</p>
+        @foreach($posts as $key => $post)
+            @include('posts.partials.post')
         @endforeach
 @endsection

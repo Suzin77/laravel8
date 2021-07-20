@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create Post')
+@section('title', 'Edit Post')
 
 @section('content')
     @if($errors->any())
@@ -12,10 +12,11 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('posts.store') }}" method="POST">
+    <form action="{{ route('posts.update', ['post' => $post->id]) }}" method="POST">
+        @method('PUT')
         @include('posts.partials.form')
         <div>
-            <input type="submit" value="create"></input>
+            <input type="submit" value="update"/>
         </div>
         @csrf
     </form>
