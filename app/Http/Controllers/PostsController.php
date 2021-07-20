@@ -98,6 +98,7 @@ class PostsController extends Controller
     public function update(StorePost $request, int $id)
     {
         $post = BlogPost::findOrFail($id);
+
         $validated = $request->validated();
 
         $post->fill($validated);

@@ -3,12 +3,12 @@
 @section('title', 'Posts Index')
 
 @section('content')
-    <h1> Post  </h1>
-    <p>{{$posts['title']}}</p></br>
-    <p>{{$posts['content']}}</p></br>
 
-{{--    @foreach($posts as $posts)--}}
-{{--        <p>{{$posts['title']}}</p></br>--}}
-{{--        <p>{{$posts['content']}}</p></br>--}}
-{{--    @endforeach--}}
+    <h3>{{ $posts->title }}</h3>
+    <p>{{ $posts->content }}</p>
+    <p>Added {{ $posts->created_at->diffForHumans() }}</p>
+
+    @if(now()->diffInMinutes($posts->created_at) < 5)
+    <p class="alert alert-info">This is a new post</p>
+    @endif
 @endsection
