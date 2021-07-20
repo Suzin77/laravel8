@@ -17,3 +17,11 @@ routes list `php artisan route:list`
 ciekawostki :
 
 helper function `abort_if()` for example `abort_if(!isset($var), 404)`
+
+
+SECTION 17 
+
+`composer rrequire laravel/ui`
+
+`php artisan ui bootstrap`
+`php artisan ui:controllers`
