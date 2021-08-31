@@ -7,8 +7,10 @@ use App\Models\BlogPost;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class PostsController extends Controller
 {
@@ -26,11 +28,19 @@ class PostsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return Application|Factory|View|Response
      */
     public function index()
     {
-        return view('posts.index', ['posts' => BlogPost::orderBy('created_at', 'desc')->get()]);
+        DB::connection()->enableQueryLog();
+
+        $posts = BlogPost::all();
+        return view('posts.index',
+            ['posts' => BlogPost::withCount('comments')
+                ->orderBy('created_at', 'desc')
+                ->get()
+            ]
+        );
     }
 
     /**
@@ -47,7 +57,7 @@ class PostsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StorePost $request
-     * @return Response
+     * @return RedirectResponse|Response
      */
     public function store(StorePost $request)
     {
@@ -79,7 +89,7 @@ class PostsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return Application|Factory|View|Response
      */
     public function edit(int $id)
     {
@@ -104,6 +114,7 @@ class PostsController extends Controller
         $post->fill($validated);
         $post->save();
 
+        $request->session()->flash('status', 'updated post');
         return redirect()->route('posts.show', ['post' => $post->id]);
     }
 

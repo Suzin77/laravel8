@@ -1,5 +1,11 @@
 <h3><a href="{{ route('posts.show', ['post' => $post->id]) }}">{{$post->title}}</a></h3>
 
+@if ($post->comments_count)
+    <p> Comments: {{$post->comments_count}}</p>
+@else
+    <p>No comments yet</p>
+@endif
+
 {{--<p>{{$post->content}}</p>--}}
 
 <div class="mb-3">
