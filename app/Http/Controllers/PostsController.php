@@ -82,7 +82,7 @@ class PostsController extends Controller
     public function show(int $id)
     {
 //        abort_if(!isset($this->posts[$id]),404);
-        return view('posts.show',['posts' => BlogPost::findOrFail($id)]);
+        return view('posts.show',['posts' => BlogPost::with('comments')->findOrFail($id)]);
     }
 
     /**

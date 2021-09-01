@@ -11,4 +11,12 @@
     @if(now()->diffInMinutes($posts->created_at) < 5)
     <p class="alert alert-info">This is a new post</p>
     @endif
+
+    <h4>Comments</h4>
+    @forelse($posts->comments as $comment)
+        <p>{{$comment->content}}, added: {{$comment->created_at->diffForHumans()}}</p>
+    @empty
+        <p>No comments yet.</p>
+    @endforelse
+
 @endsection
