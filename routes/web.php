@@ -25,6 +25,10 @@ Route::get('/contact', [HomeController::class, 'contact'])
 
 Route::get('/single', AboutController::class);
 
+Route::get('/info', function (){
+    phpinfo();
+});
+
 
 $posts = [
     1=> [
@@ -82,4 +86,9 @@ Route::prefix('/fun')->name('fun.')->group(function () use($posts){
     });
 
 });
+
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
