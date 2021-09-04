@@ -58,7 +58,8 @@ class PostTest extends TestCase
             'content' => 'new content',
         ];
 
-        $this->post('/posts', $params)
+        $this->actingAs($this->user())
+            ->post('/posts', $params)
             ->assertStatus(302)
             ->assertSessionHas('status');
 
@@ -73,7 +74,8 @@ class PostTest extends TestCase
             'content' => 'a'
         ];
 
-        $this->post('/posts', $params)
+        $this->actingAs($this->user())
+            ->post('/posts', $params)
             ->assertStatus(302)
             ->assertSessionHas('errors');
 
@@ -102,7 +104,8 @@ class PostTest extends TestCase
             'content' => 'new update content',
         ];
 
-        $this->put("/posts/{$post->id}", $params)
+        $this->actingAs($this->user())
+            ->put("/posts/{$post->id}", $params)
             ->assertStatus(302)
             ->assertSessionHas('status');
 
@@ -113,12 +116,15 @@ class PostTest extends TestCase
 
     public function testDeletePost()
     {
+        $user = $this->user();
+
         $post = $this->createDummyBlogPost();
         $this->assertDatabaseHas('blog_posts', [
             'title' => $post->title
         ]);
 
-        $this->delete("/posts/{$post->id}")
+        $this->actingAs($user)
+            ->delete("/posts/{$post->id}")
             ->assertStatus(302)
             ->assertSessionHas('status');
 
