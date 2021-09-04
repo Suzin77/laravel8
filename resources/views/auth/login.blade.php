@@ -28,12 +28,12 @@
 
        <div class="form-group">
            <div class="form-check">
-               <label for="" class="form-check-input">Remember me</label>
                <input type="checkbox" class="form-check-input" name="remember" value="{{old('remember') ? 'checked' : ''}}">
+               <label for="remember" class="form-check-label">Remember me</label>
            </div>
        </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
-       
+       <button type="submit" class="btn btn-primary btn-block">Login</button>
+
    </form>
 @endsection('content')
