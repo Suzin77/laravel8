@@ -14,7 +14,8 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $userCount = max((int) $this->command->ask('Ile userów wariacie?', 20),1);
         User::factory()->definedUser()->create();
-        User::factory(10)->create();
+        User::factory($userCount)->create();
     }
 }

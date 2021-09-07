@@ -17,6 +17,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        if($this->command->confirm('Stawiać nową bazę?', true)){
+            $this->command->call('migrate:refresh');
+            $this->command->info('Postawiono');
+        }
+
+
         $this->call([
             UsersTableSeeder::class,
             BlogPostsTableSeeder::class,
