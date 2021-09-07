@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
 
-    const TEST_EMAIL = 'test123@wp.pl';
+    const TEST_EMAIL = 'test@wp.pl';
     /**
      * The name of the factory's corresponding model.
      *
