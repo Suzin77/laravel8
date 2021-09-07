@@ -4,10 +4,13 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
+
+    const TEST_EMAIL = 'test123@wp.pl';
     /**
      * The name of the factory's corresponding model.
      *
@@ -42,6 +45,23 @@ class UserFactory extends Factory
             return [
                 'email_verified_at' => null,
             ];
+        });
+    }
+
+    public function definedUser()
+    {
+        return $this->state(function(){
+            if(empty(User::where('email', '=',  self::TEST_EMAIL)->first())){
+                return [
+                    'name' => 'pat',
+                    'email' => self::TEST_EMAIL,
+                    'email_verified_at' => now(),
+                    'password' => Hash::make('test1234'),
+                    'remember_token' => Str::random(10),
+                ];
+            } else {
+                return [];
+            }
         });
     }
 }
