@@ -129,7 +129,7 @@ class PostTest extends TestCase
             ->assertSessionHas('status');
 
         $this->assertEquals("Blog post was deleted", session('status'));
-        $this->assertDatabaseMissing('blog_posts', [
+        $this->assertSoftDeleted('blog_posts', [
             'title' => $post->title,
             'content' => $post->content
         ]);
