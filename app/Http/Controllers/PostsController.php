@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class PostsController extends Controller
 {
@@ -106,6 +107,10 @@ class PostsController extends Controller
     {
         $post = BlogPost::findOrFail($id);
 
+        if(Gate::denies('update-post', $post)){
+            abort(403, 'Otóż nie tym razem');
+        }
+
         return view('posts.edit', ['post' => $post]);
     }
 
@@ -118,8 +123,12 @@ class PostsController extends Controller
      */
     public function update(StorePost $request, int $id)
     {
+
         $post = BlogPost::findOrFail($id);
 
+        if(Gate::denies('update-post', $post)){
+            abort(403,'No i dupa');
+        }
         $validated = $request->validated();
 
         $post->fill($validated);
@@ -138,6 +147,10 @@ class PostsController extends Controller
     public function destroy(int $id)
     {
         $post = BlogPost::findOrFail($id);
+
+        if(Gate::denies('delete-post', $post)){
+            abort(403, 'Kasowanko? Otóż nie tym razem.');
+        }
 
         $post->delete();
 
