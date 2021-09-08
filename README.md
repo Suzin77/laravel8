@@ -25,3 +25,5 @@ SECTION 17
 
 `php artisan ui bootstrap`
 `php artisan ui:controllers`
+
+SECTION 26
