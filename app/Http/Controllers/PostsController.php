@@ -107,9 +107,11 @@ class PostsController extends Controller
     {
         $post = BlogPost::findOrFail($id);
 
-        if(Gate::denies('update-post', $post)){
-            abort(403, 'Otóż nie tym razem');
-        }
+        $this->authorize('update-post', $post);
+
+//        if(Gate::denies('update-post', $post)){
+//            abort(403, 'Otóż nie tym razem');
+//        }
 
         return view('posts.edit', ['post' => $post]);
     }
