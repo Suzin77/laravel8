@@ -62,6 +62,7 @@ class PostsController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', BlogPost::class);
         return view('posts.create');
     }
 
@@ -107,7 +108,7 @@ class PostsController extends Controller
     {
         $post = BlogPost::findOrFail($id);
 
-        $this->authorize('update-post', $post);
+        $this->authorize('post.update', $post);
 
 //        if(Gate::denies('update-post', $post)){
 //            abort(403, 'Otóż nie tym razem');
@@ -128,7 +129,7 @@ class PostsController extends Controller
 
         $post = BlogPost::findOrFail($id);
 
-        if(Gate::denies('update-post', $post)){
+        if(Gate::denies('post.update', $post)){
             abort(403,'No i dupa');
         }
         $validated = $request->validated();
@@ -150,7 +151,7 @@ class PostsController extends Controller
     {
         $post = BlogPost::findOrFail($id);
 
-        if(Gate::denies('delete-post', $post)){
+        if(Gate::denies('post.delete', $post)){
             abort(403, 'Kasowanko? Otóż nie tym razem.');
         }
 
