@@ -8,12 +8,15 @@
 @endif
 
 {{--<p>{{$post->content}}</p>--}}
-
 <div class="mb-3">
-    <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary">Edit</a>
+@can('update', $post)
+    <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary" >Edit</a>
+    @endcan
+    @can('delete', $post)
     <form class="d-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
         @csrf
         @method('DELETE')
         <input class="btn btn-danger" type="submit" value="Delete">
     </form>
+    @endcan
 </div>

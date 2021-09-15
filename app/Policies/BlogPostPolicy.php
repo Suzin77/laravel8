@@ -54,10 +54,7 @@ class BlogPostPolicy
      */
     public function update(User $user, BlogPost $blogPost)
     {
-        $isAuthor = $user->id == $blogPost->user_id;
-        $isAdmin = $user->is_admin == 1;
-
-        return $isAdmin || $isAuthor;
+        return  $user->id == $blogPost->user_id;
     }
 
     /**
@@ -69,8 +66,10 @@ class BlogPostPolicy
      */
     public function delete(User $user, BlogPost $blogPost)
     {
-        //dd($user->email);
-        return $user->id == $blogPost->user_id;
+        $isAuthor = $user->id == $blogPost->user_id;
+        $isAdmin = $user->is_admin == 1;
+
+        return $isAuthor || $isAdmin;
     }
 
     /**
