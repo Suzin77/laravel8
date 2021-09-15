@@ -49,7 +49,7 @@ class PostsController extends Controller
         $posts = BlogPost::all();
         return view('posts.index',
             ['posts' => BlogPost::withCount('comments')
-                ->orderBy('created_at', 'desc')
+                //->orderBy('created_at', 'desc')
                 ->get()
             ]
         );
@@ -75,11 +75,8 @@ class PostsController extends Controller
     public function store(StorePost $request)
     {
         $validated = $request->validated();
-        $post = BlogPost::create();
-
-        $post->title = $validated['title'];
-        $post->content = $validated['content'];
-        $post->save();
+        $validated['user_id'] = $request->user()->id;
+        $post = BlogPost::create($validated);
 
         $request->session()->flash('status', 'created post');
 
