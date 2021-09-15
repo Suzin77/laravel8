@@ -16,7 +16,9 @@ class CommentsTableSeeder extends Seeder
     public function run()
     {
         $posts = BlogPost::all();
-        Comment::factory(150)->make()->each(function ($comment) use ($posts){
+
+        $commentsNumber = $this->command->ask('Ile commentów', 150);
+        Comment::factory($commentsNumber)->make()->each(function ($comment) use ($posts){
             $comment->blog_post_id  = $posts->random()->id;
             $comment->save();
         });
