@@ -87,9 +87,11 @@ class PostTest extends TestCase
 
     public function testUpdateValid()
     {
+        $user = $this->user();
         $post = new BlogPost();
         $post->title = 'title asas';
         $post->content = 'content sfsdfs';
+        $post->user_id = $user->id;
         $post->save();
 
         //dd($post->toArray());
@@ -104,7 +106,7 @@ class PostTest extends TestCase
             'content' => 'new update content',
         ];
 
-        $this->actingAs($this->user())
+        $this->actingAs($user)
             ->put("/posts/{$post->id}", $params)
             ->assertStatus(302)
             ->assertSessionHas('status');
@@ -118,7 +120,7 @@ class PostTest extends TestCase
     {
         $user = $this->user();
 
-        $post = $this->createDummyBlogPost();
+        $post = $this->createDummyBlogPostForUser($user->id);
         $this->assertDatabaseHas('blog_posts', [
             'title' => $post->title
         ]);
@@ -137,6 +139,15 @@ class PostTest extends TestCase
 
     private function createDummyBlogPost(): BlogPost
     {
-        return BlogPost::factory()->definedBlogPost()->create();
+        return BlogPost::factory()->definedBlogPost()->create([
+
+        ]);
+    }
+
+    private function createDummyBlogPostForUser($id = null): BlogPost
+    {
+        return BlogPost::factory()->definedBlogPost()->create([
+            'user_id' => $id ?? $this->user()->id
+        ]);
     }
 }
