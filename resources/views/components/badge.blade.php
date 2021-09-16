@@ -1,1 +1,5 @@
-<p class="badge badge-{{$type ?? "success"}}">{{$slot}}</p>
+@if(!isset($show) || $show)
+    <span class="badge badge-{{$type ?? "success"}}">
+        {{$slot}}
+    </span>
+@endif

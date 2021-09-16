@@ -5,7 +5,13 @@
     <a class="{{$post->trashed() ? "text-muted" : ""}}" href="{{ route('posts.show', ['post' => $post->id]) }}">{{$post->title}}</a>
 </h3>
 
-<p>Added {{ $post->created_at->diffForHumans() }}   by: {{$post->user->name}}</p>
+@updated([
+    'date' => $post->created_at,
+    'name' => $post->user->name
+])
+    Dodano
+@endupdated
+
 @if ($post->comments_count)
     <p> Comments: {{$post->comments_count}}</p>
 @else
