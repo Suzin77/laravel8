@@ -50,6 +50,21 @@
                             @endforeach
                         </ul>
                     </div>
+
+                    <div class="card mt-4" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Last month</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">What's the fuzz ?</h6>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            @foreach($mostActiveLastMonth as $user)
+                                <li class="list-group-item">
+                                    {{$user->name}}
+                                    ({{$user->blog_posts_count}})
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

@@ -42,13 +42,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function scopeMostActive(Builder $query)
+    public function blogPosts()
+    {
+        return $this->hasMany(BlogPost::class);
+    }
+
+    public function scopeMostActive(Builder $query) : Builder
     {
         return $query->withCount('blogPosts')->orderBy('blog_posts_count', 'desc');
     }
 
-    public function blogPosts()
+    public function scopeMostActiveLastMonth(Builder $query)
     {
-        return $this->hasMany(BlogPost::class);
+        return $query->withCount(['blogPosts' => function (Builder $query){
+            $query->whereBetween(static::CREATED_AT,[now()->subMonth(),now()]);
+        }])
+            ->has('blogPosts','>=',2)
+            ->orderBy('blog_posts_count', 'desc');
     }
 }

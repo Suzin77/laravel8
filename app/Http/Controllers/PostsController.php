@@ -52,9 +52,11 @@ class PostsController extends Controller
             [
                 'posts' => BlogPost::mydesc()->withCount('comments')->get(),
                 'most_popular' => BlogPost::mostpopular()->take(5)->get(),
-                'mostActiveUsers' => User::mostActive()->take(5)->get()
+                'mostActiveUsers' => User::mostActive()->take(5)->get(),
+                'mostActiveLastMonth' => User::mostActiveLastMonth()->take(5)->get(),
             ]
         );
+
     }
 
     /**
