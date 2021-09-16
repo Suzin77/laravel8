@@ -22,6 +22,9 @@
         @updated(['date' => $comment->created_at])
             Dodano
         @endupdated
+        @updated(['date' => $comment->updated_at])
+            Zaktualizowano
+        @endupdated
 
     @empty
         <p>No comments yet.</p>
