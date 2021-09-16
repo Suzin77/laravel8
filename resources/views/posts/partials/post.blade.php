@@ -1,4 +1,9 @@
-<h3><a href="{{ route('posts.show', ['post' => $post->id]) }}">{{$post->title}}</a></h3>
+@if($post->trashed())
+    <p class="alert-danger"> Post was soft deleted</p>
+@endif
+<h3>
+    <a class="{{$post->trashed() ? "text-muted" : ""}}" href="{{ route('posts.show', ['post' => $post->id]) }}">{{$post->title}}</a>
+</h3>
 
 <p>Added {{ $post->created_at->diffForHumans() }}   by: {{$post->user->name}}</p>
 @if ($post->comments_count)
@@ -12,11 +17,13 @@
 @can('update', $post)
     <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary" >Edit</a>
     @endcan
-    @can('delete', $post)
-    <form class="d-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <input class="btn btn-danger" type="submit" value="Delete">
-    </form>
-    @endcan
+    @if(!$post->trashed())
+        @can('delete', $post)
+            <form class="d-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <input class="btn btn-danger" type="submit" value="Delete">
+            </form>
+        @endcan
+    @endif
 </div>

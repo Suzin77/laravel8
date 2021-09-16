@@ -8,8 +8,10 @@
     <p>{{ $posts->content }}</p>
     <p>Added {{ $posts->created_at->diffForHumans() }}</p>
 
-    @if(now()->diffInMinutes($posts->created_at) < 5)
-    <p class="alert alert-info">This is a new post</p>
+    @if(now()->diffInMinutes($posts->created_at) < 15)
+        @component('components.badge', ['type' => 'primary'])
+            This is a new post!
+        @endcomponent
     @endif
 
     <h4>Comments</h4>
