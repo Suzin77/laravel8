@@ -39,6 +39,12 @@ class BlogPost extends Model
         return $query->orderBy(model::CREATED_AT, 'desc');
     }
 
+    public function scopeMostpopular(Builder $query)
+    {
+        //comments_count
+        return $query->withCount('comments')->orderBy('comments_count', 'desc');
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class)->mydesc();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -48,9 +49,10 @@ class PostsController extends Controller
 
         $posts = BlogPost::all();
         return view('posts.index',
-            ['posts' => BlogPost::withCount('comments')
-                //->orderBy('created_at', 'desc')
-                ->get()
+            [
+                'posts' => BlogPost::mydesc()->withCount('comments')->get(),
+                'most_popular' => BlogPost::mostpopular()->take(5)->get(),
+                'mostActiveUsers' => User::mostActive()->take(5)->get()
             ]
         );
     }
@@ -91,8 +93,14 @@ class PostsController extends Controller
      */
     public function show(int $id)
     {
+//        $posts = BlogPost::with([
+//            'comments' => function ($query){
+//                return $query->myDesc();
+//            }
+//        ])->findOrFail($id);
+        $posts = BlogPost::with(['comments'])->findOrFail($id);
 //        abort_if(!isset($this->posts[$id]),404);
-        return view('posts.show',['posts' => BlogPost::with('comments')->findOrFail($id)]);
+        return view('posts.show',['posts' => $posts]);
     }
 
     /**
