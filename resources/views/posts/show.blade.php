@@ -26,8 +26,11 @@
             Zaktualizowano
         @endupdated
 
+
     @empty
         <p>No comments yet.</p>
     @endforelse
+
+    <p>Number of viewers: {{$counter}}</p>
 
 @endsection

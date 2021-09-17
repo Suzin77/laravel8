@@ -19,9 +19,10 @@
 @endif
 
 {{--<p>{{$post->content}}</p>--}}
+@auth
 <div class="mb-3">
-@can('update', $post)
-    <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary" >Edit</a>
+    @can('update', $post)
+        <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary" >Edit</a>
     @endcan
     @if(!$post->trashed())
         @can('delete', $post)
@@ -33,3 +34,4 @@
         @endcan
     @endif
 </div>
+@endauth

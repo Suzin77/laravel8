@@ -11,8 +11,10 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 
 class PostsController extends Controller
 {
@@ -28,16 +30,6 @@ class PostsController extends Controller
         ]);
     }
 
-    private $posts = [
-        1=> [
-            'title' => 'title1',
-            'content' => 'content1'
-        ],
-        2=> [
-            'title' => 'title2',
-            'content' => 'content2'
-        ],
-    ];
     /**
      * Display a listing of the resource.
      *
@@ -45,15 +37,30 @@ class PostsController extends Controller
      */
     public function index()
     {
+        $mostCommented = \Cache::remember('most_popular', now()->addSeconds(10), function (){
+           return  BlogPost::mostpopular()->take(5)->get();
+        });
+
+        $mostActiveUsers = \Cache::remember('mostActiveUsers', now()->addSeconds(10), function (){
+            return  User::mostActive()->take(5)->get();
+        });
+
+        $mostActiveLastMonth = \Cache::remember('mostActiveLastMonth', now()->addSeconds(10), function (){
+            return  User::mostActiveLastMonth()->take(5)->get();
+        });
+
+
+
+
         DB::connection()->enableQueryLog();
 
         $posts = BlogPost::all();
         return view('posts.index',
             [
-                'posts' => BlogPost::mydesc()->withCount('comments')->get(),
-                'most_popular' => BlogPost::mostpopular()->take(5)->get(),
-                'mostActiveUsers' => User::mostActive()->take(5)->get(),
-                'mostActiveLastMonth' => User::mostActiveLastMonth()->take(5)->get(),
+                'posts' => BlogPost::mydesc()->withCount('comments')->with('user')->get(),
+                'most_popular' => $mostCommented,
+                'mostActiveUsers' => $mostActiveUsers,
+                'mostActiveLastMonth' => $mostActiveLastMonth,
             ]
         );
 
@@ -100,9 +107,46 @@ class PostsController extends Controller
 //                return $query->myDesc();
 //            }
 //        ])->findOrFail($id);
-        $posts = BlogPost::with(['comments'])->findOrFail($id);
+
+        $sessionId = Session::getId();
+        $counterKey = "blog-post-{$id}-counter";
+        $usersKey = "blog-post-{$id}-users";
+
+        $users = Cache::get($usersKey, []);
+        $usersUpdate = [];
+        $difference = 0;
+        $now = now();
+
+        foreach ($users as $session => $lastVisit){
+            if($now->diffInMinutes($lastVisit) >= 1){
+                $difference--;
+            } else {
+                $usersUpdate[$session] = $lastVisit;
+            }
+        }
+
+        if(!array_key_exists($sessionId,$users) || $now->diffInMinutes($users[$sessionId]) >= 1){
+            $difference++;
+        }
+
+        $usersUpdate[$sessionId] = $now;
+        Cache::put($usersKey,$usersUpdate);
+
+        if(!Cache::has($counterKey)){
+            Cache::forever($counterKey, 1);
+        } else {
+            Cache::increment($counterKey, $difference);
+        }
+
+        $counter = Cache::get($counterKey);
+
+        $posts = Cache::remember("blog-post-{$id}", 30, function () use($id){
+            return BlogPost::with(['comments'])->findOrFail($id);
+        });
+
+        //$posts = BlogPost::with(['comments'])->findOrFail($id);
 //        abort_if(!isset($this->posts[$id]),404);
-        return view('posts.show',['posts' => $posts]);
+        return view('posts.show',['posts' => $posts, 'counter' => $counter]);
     }
 
     /**
