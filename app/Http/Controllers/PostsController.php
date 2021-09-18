@@ -57,7 +57,7 @@ class PostsController extends Controller
         $posts = BlogPost::all();
         return view('posts.index',
             [
-                'posts' => BlogPost::mydesc()->withCount('comments')->with('user')->get(),
+                'posts' => BlogPost::mydesc()->withCount('comments')->with(['user','tags'])->get(),
                 'most_popular' => $mostCommented,
                 'mostActiveUsers' => $mostActiveUsers,
                 'mostActiveLastMonth' => $mostActiveLastMonth,
@@ -141,7 +141,7 @@ class PostsController extends Controller
         $counter = Cache::tags(['blog-post'])->get($counterKey);
 
         $posts = Cache::tags(['blog-post'])->remember("blog-post-{$id}", 30, function () use($id){
-            return BlogPost::with(['comments'])->findOrFail($id);
+            return BlogPost::with(['comments', 'tags'])->findOrFail($id);
         });
 
         //$posts = BlogPost::with(['comments'])->findOrFail($id);
