@@ -15,7 +15,8 @@ class Comment extends Model
 
 
     protected $fillable = [
-        'content'
+        'content',
+        'user_id'
     ];
 
     public static function boot()

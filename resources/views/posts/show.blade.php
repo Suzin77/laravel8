@@ -16,6 +16,8 @@
             <p>{{ $posts->content }}</p>
             <p>Added {{ $posts->created_at->diffForHumans() }}</p>
             @tag(['tags' => $posts->tags])@endtag
+
+            @include('comments.create')
             <h4>Comments</h4>
             @forelse($posts->comments as $comment)
                 <p>{{$comment->content}}</p>
