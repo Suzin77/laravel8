@@ -83,12 +83,6 @@ class PostsController extends Controller
      */
     public function show(int $id)
     {
-//        $posts = BlogPost::with([
-//            'comments' => function ($query){
-//                return $query->myDesc();
-//            }
-//        ])->findOrFail($id);
-
         $sessionId = Session::getId();
         $counterKey = "blog-post-{$id}-counter";
         $usersKey = "blog-post-{$id}-users";
@@ -122,7 +116,7 @@ class PostsController extends Controller
         $counter = Cache::tags(['blog-post'])->get($counterKey);
 
         $posts = Cache::tags(['blog-post'])->remember("blog-post-{$id}", 30, function () use($id){
-            return BlogPost::with(['comments', 'tags'])->findOrFail($id);
+            return BlogPost::with(['comments', 'tags', 'comments.user'])->findOrFail($id);
         });
 
         //$posts = BlogPost::with(['comments'])->findOrFail($id);
