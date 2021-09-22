@@ -19,7 +19,7 @@
             <h4>Comments</h4>
             @forelse($posts->comments as $comment)
                 <p>{{$comment->content}}</p>
-                @updated(['date' => $comment->created_at])
+                @updated(['date' => $comment->created_at, 'name' => $comment->user->name])
                     Dodano
                 @endupdated
                 @updated(['date' => $comment->updated_at])

@@ -25,6 +25,11 @@ class Comment extends Model
         //static::addGlobalScope(new LatestScope);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function scopeMydesc(Builder $query)
     {
         return $query->orderBy(model::CREATED_AT, 'desc');
