@@ -12,6 +12,8 @@
     Dodano
 @endupdated
 
+@tag(['tags' => $post->tags])@endtag
+
 @if ($post->comments_count)
     <p> Comments: {{$post->comments_count}}</p>
 @else

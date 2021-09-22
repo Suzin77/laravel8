@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
-use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -37,30 +35,13 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $mostCommented = Cache::tags(['blog-post'])->remember('most_popular', now()->addSeconds(10), function (){
-           return  BlogPost::mostpopular()->take(5)->get();
-        });
-
-        $mostActiveUsers = Cache::tags(['blog-post'])->remember('mostActiveUsers', now()->addSeconds(10), function (){
-            return  User::mostActive()->take(5)->get();
-        });
-
-        $mostActiveLastMonth = Cache::tags(['blog-post'])->remember('mostActiveLastMonth', now()->addSeconds(10), function (){
-            return  User::mostActiveLastMonth()->take(5)->get();
-        });
-
-
-
-
         DB::connection()->enableQueryLog();
 
-        $posts = BlogPost::all();
+        //$posts = BlogPost::all();
+
         return view('posts.index',
             [
-                'posts' => BlogPost::mydesc()->withCount('comments')->with(['user','tags'])->get(),
-                'most_popular' => $mostCommented,
-                'mostActiveUsers' => $mostActiveUsers,
-                'mostActiveLastMonth' => $mostActiveLastMonth,
+                'posts' => BlogPost::mydesc()->withCount('comments')->with(['user','tags'])->get()
             ]
         );
 
