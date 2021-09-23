@@ -70,6 +70,25 @@ class PostsController extends Controller
         $validated['user_id'] = $request->user()->id;
         $post = BlogPost::create($validated);
 
+        $hasFile = $request->hasFile('thumbnail');
+
+        if($hasFile){
+            $file = $request->file('thumbnail');
+            $file->store('thumbnails');
+            \Storage::disk('public')->putFile('thumbnails', $file);
+
+            //to
+            $name1 = $file->storeAs('thumbnail', $post->id. "." .$file->guessExtension());
+            //is the same as:
+            $name2 = \Storage::disk('local')->putFileAs('thumbnails', $file, $post->id.".".$file->guessExtension());
+
+           dump(\Storage::url($name1));
+            dump(\Storage::disk('local')->url($name2));
+        }
+
+        die;
+
+
         $request->session()->flash('status', 'created post');
 
         return redirect()->route('posts.show', ['post' => $post->id]);

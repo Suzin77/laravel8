@@ -13,7 +13,6 @@ abstract class TestCase extends BaseTestCase
 
     protected function user()
     {
-
         return User::factory()->create();
     }
 }
