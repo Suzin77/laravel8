@@ -34,6 +34,7 @@ class BlogPost extends Model
 
         static::deleting(function (BlogPost $blogPost){
             $blogPost->comments()->delete();
+            //$blogPost->image()->delete();
         });
 
         static::restoring(function (BlogPost $blogPost){
@@ -65,6 +66,11 @@ class BlogPost extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'blog_post_tag')->withTimestamps();
+    }
+
+    public function image()
+    {
+        return $this->hasOne(Image::class);
     }
 
 }

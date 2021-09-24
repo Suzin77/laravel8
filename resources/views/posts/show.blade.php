@@ -5,14 +5,7 @@
 @section('content')
     <div class="row">
         <div class="col-8">
-            <h3>
-                {{ $posts->title }}
-
-                @badge(['show' => now()->diffInMinutes($posts->created_at) < 20])
-                    This is a new post!
-                @endbadge
-
-            </h3>
+            @include('posts.partials._background-image', ['posts' => $posts])
             <p>{{ $posts->content }}</p>
             <p>Added {{ $posts->created_at->diffForHumans() }}</p>
             @tag(['tags' => $posts->tags])@endtag

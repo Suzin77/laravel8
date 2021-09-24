@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
+use App\Models\Image;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -70,23 +71,18 @@ class PostsController extends Controller
         $validated['user_id'] = $request->user()->id;
         $post = BlogPost::create($validated);
 
-        $hasFile = $request->hasFile('thumbnail');
 
-        if($hasFile){
-            $file = $request->file('thumbnail');
-            $file->store('thumbnails');
-            \Storage::disk('public')->putFile('thumbnails', $file);
+        if($request->hasFile('thumbnail')){
+            $path = $request->file('thumbnail')->store('thumbnails');
+            $post->image()->save(Image::create(['path' => $path,]));
 
             //to
-            $name1 = $file->storeAs('thumbnail', $post->id. "." .$file->guessExtension());
+            //$name1 = $file->storeAs('thumbnail', $post->id. "." .$file->guessExtension());
             //is the same as:
-            $name2 = \Storage::disk('local')->putFileAs('thumbnails', $file, $post->id.".".$file->guessExtension());
-
-           dump(\Storage::url($name1));
-            dump(\Storage::disk('local')->url($name2));
+            //$name2 = \Storage::disk('local')->putFileAs('thumbnails', $file, $post->id.".".$file->guessExtension());
         }
 
-        die;
+        //die;
 
 
         $request->session()->flash('status', 'created post');
@@ -154,8 +150,7 @@ class PostsController extends Controller
         $post = BlogPost::findOrFail($id);
 
         $this->authorize('update', $post);
-
-//        if(Gate::denies('update-post', $post)){
+        //        if(Gate::denies('update-post', $post)){
 //            abort(403, 'Otóż nie tym razem');
 //        }
 
@@ -177,9 +172,20 @@ class PostsController extends Controller
         if(Gate::denies('post.update', $post)){
             abort(403,'No i dupa');
         }
-        $validated = $request->validated();
 
+        $validated = $request->validated();
         $post->fill($validated);
+        if($request->hasFile('thumbnail')){
+            $newPath = $request->file('thumbnail')->store('thumbnails');
+            if($post->image){
+                \Storage::delete($post->image->path);
+                $post->image->path =$newPath;
+                $post->image->save();
+            } else {
+                $post->image()->save(Image::create(['path' => $newPath,]));
+            }
+
+        }
         $post->save();
 
         $request->session()->flash('status', 'updated post');
